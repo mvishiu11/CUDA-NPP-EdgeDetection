@@ -1,5 +1,7 @@
 # CUDA NPP vs Custom Sobel Edge Detection
 
+![CUDA](https://img.shields.io/badge/CUDA-green?logo=nvidia) ![NPP](https://img.shields.io/badge/NPP-Image%20Processing-orange?logo=nvidia) ![OpenCV](https://img.shields.io/badge/OpenCV-Image%20Processing-blue?logo=opencv)
+
 ## Introduction
 
 This repository showcases the performance comparison between a custom Sobel filter implemented using the CUDA runtime API and NVIDIA’s NPP (NVIDIA Performance Primitives) Sobel filter. Both filters are applied to a batch of 210 grayscale images, each sized at 250x250 pixels, taken from the [Modified USC-SIPI Image Database](https://github.com/orukundo/Modified-USC-SIPI-Image-Database). The primary goal of this project is to demonstrate how much faster the NPP-based implementation is compared to a custom-written Sobel filter in CUDA, while providing a deeper understanding of Sobel filtering and its importance in image processing.
