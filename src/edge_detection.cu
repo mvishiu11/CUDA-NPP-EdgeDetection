@@ -86,8 +86,6 @@ void applyCustomSobel(Npp8u* pSrc, Npp8u* pDst, NppiSize oSizeROI) {
         std::cerr << "CUDA error: " << cudaGetErrorString(err) << std::endl;
         exit(EXIT_FAILURE);
     }
-
-    std::cout << "Custom Sobel filter applied successfully." << std::endl;
 }
 
 void applyNppSobel(Npp8u* pSrc, Npp8u* pDst, NppiSize oSizeROI) {
@@ -101,6 +99,10 @@ void processImage(const std::string& imageFile, const std::string& outputDir, bo
     Npp8u* pDst = nullptr;
 
     loadImage(imageFile.c_str(), &pSrc, &oSizeROI);
+
+    std::cout << "Processing image: " << imageFile << std::endl;
+    std::cout << "Image size: " << oSizeROI.width << "x" << oSizeROI.height << std::endl;
+
     cudaMalloc((void**)&pDst, oSizeROI.width * oSizeROI.height * sizeof(Npp8u));
 
     if (useCustom) {
@@ -146,19 +148,26 @@ int main(int argc, char** argv) {
     std::filesystem::create_directories(customOutputDir);
     std::filesystem::create_directories(nppOutputDir);
 
+    std::cout << "|----------------------CUSTOM SOBEL START----------------------|" << std::endl;
+
     // Benchmark and process custom Sobel
     auto start = std::chrono::high_resolution_clock::now();
     processBatch(inputDir, customOutputDir, batchSize, true);  // true for custom Sobel
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> customDuration = end - start;
-    std::cout << "Custom Sobel processing time: " << customDuration.count() << " seconds\n";
+    std::cout << "Custom Sobel processing time: " << customDuration.count() << " seconds" << std::endl;
+
+    std::cout << "|----------------------CUSTOM SOBEL END----------------------|" << std::endl;
+    std::cout << "|----------------------NPP SOBEL START----------------------|" << std::endl;
 
     // Benchmark and process NPP Sobel
     start = std::chrono::high_resolution_clock::now();
     processBatch(inputDir, nppOutputDir, batchSize, false);  // false for NPP Sobel
     end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> nppDuration = end - start;
-    std::cout << "NPP Sobel processing time: " << nppDuration.count() << " seconds\n";
+    std::cout << "NPP Sobel processing time: " << nppDuration.count() << " seconds" << std::endl;
+
+    std::cout << "|----------------------NPP SOBEL END----------------------|" << std::endl;
 
     return 0;
 }
